@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import { AnyObject } from "../type";
 import { HttpMethod } from "../variable";
 
-export { login, create, get };
+export { login, logout, create, get };
 
 const API_HOST = import.meta.env.VITE_REACT_APP_API_HOST as string;
 
@@ -15,6 +15,17 @@ async function login(data: Record<string, string>) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
+  });
+  return response.json();
+}
+
+async function logout(token: string) {
+  const response = await fetch(`${API_HOST}/api/user/logout`, {
+    method: HttpMethod.POST,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
   return response.json();
 }

@@ -25,9 +25,11 @@ export default function UserList() {
   return (
     <>
       <h1>User List</h1>
-      <ul className="list-group">
+      <ul className="user-list">
         {users.map((user: AnyObject) => (
-          <li key={user.id}>{user.name}</li>
+          <li className="user-list-item" key={user.id}>
+            {user.name}
+          </li>
         ))}
       </ul>
     </>
