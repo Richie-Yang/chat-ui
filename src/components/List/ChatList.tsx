@@ -68,7 +68,7 @@ export default function ChatList(props: Props) {
 function _parseMessage(messageData: AnyObject, fromId: string) {
   const { content, from, createdAt } = messageData;
   const datetime = moment(createdAt * 1000).format("YYYY-MM-DD HH:mm:ss");
-  const source = fromId === from.id ? "right" : "left";
+  const source = fromId === from?.id ? "right" : "left";
   const talker = source === "right" ? "You" : from.name;
   return {
     source,

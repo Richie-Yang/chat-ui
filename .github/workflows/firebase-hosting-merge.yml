@@ -10,11 +10,12 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    env:
+      VITE_REACT_APP_API_HOST: https://chat-app-vlwbiireva-de.a.run.app
     steps:
       - uses: actions/checkout@v4
-      - run: npm run build
-      - name: Set environment based on branch
-        run: echo "ENVIRONMENT=$(if [ "${{ github.ref }}" = "refs/heads/main" ]; then echo production; else echo development; fi)" >> $GITHUB_ENV
+      - run: npm ci && npm run build
+      - run: echo "${{ env.VITE_REACT_APP_API_HOST }}"
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -22,4 +23,4 @@ jobs:
           channelId: live
           projectId: richie-demo
         env:
-          ENV: ${{ env.ENVIRONMENT }}
+          VITE_REACT_APP_API_HOST: ${{ env.VITE_REACT_APP_API_HOST }}
