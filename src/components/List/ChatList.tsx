@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { chatApi } from "../../apis";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AnyObject } from "../../type";
 import moment from "moment";
 import image from "../../../public/images/default_avatar.png";
@@ -8,13 +8,15 @@ import { Socket } from "socket.io-client";
 
 interface Props {
   socket: Socket;
+  chatEndRef: React.RefObject<HTMLDivElement>;
 }
 
 export default function ChatList(props: Props) {
-  const { socket } = props;
+  const { socket, chatEndRef } = props;
   console.log(socket);
 
   const [messages, setMessages] = useState([{}]);
+
   const token = sessionStorage.getItem("token");
   const chatId = sessionStorage.getItem("chatId");
   const fromId = sessionStorage.getItem("fromId");
@@ -32,17 +34,20 @@ export default function ChatList(props: Props) {
         _parseMessage(messageData, fromId!)
       );
       setMessages(parsedMessages);
+      window.scrollTo(0, document.body.scrollHeight);
     };
-
     fetchMessages();
   }, [id, token, chatId, fromId, toId]);
 
   socket.on(chatId!, (messageData) => {
     const msg = _parseMessage(messageData, fromId!);
-    setMessages([msg]);
+    const newMessages = [...messages, msg];
+    setMessages(newMessages);
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   });
 
   const switchSource = (source: string) => `message ${source}`;
+
   return (
     <>
       <ul className="chat-container">

@@ -18,29 +18,30 @@ export default function ChatForm(props: Props) {
   if (!chatId || !fromId || !toId) window.location.href = "./user-list";
 
   return (
-    <form id="form" action="">
+    <form
+      id="form"
+      action=""
+      onSubmit={(event) => {
+        event.preventDefault();
+        console.log(message);
+        if (!message) return;
+
+        socket.emit("chat message", {
+          fromId,
+          toId,
+          content: message,
+          chatId,
+        });
+        setMessage("");
+      }}
+    >
       <input
         id="input"
         autoComplete="off"
-        onChange={(event) => setMessage(event.target.value)}
+        value={message}
+        onInput={(event) => setMessage(event.currentTarget.value)}
       />
-      <button
-        onClick={(event) => {
-          event.preventDefault();
-          console.log(message);
-          if (!message) return;
-
-          socket.emit("chat message", {
-            fromId,
-            toId,
-            content: message,
-            chatId,
-          });
-          setMessage("");
-        }}
-      >
-        Send
-      </button>
+      <button>Send</button>
     </form>
   );
 }
